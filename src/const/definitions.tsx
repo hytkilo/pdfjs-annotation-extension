@@ -33,6 +33,12 @@ export type PdfjsAnnotationSubtype =
     | 'StrikeOut'
     | 'Stamp'
     | 'FileAttachment'
+    | 'High'
+    | 'Normal'
+    | 'Low'
+    | 'HighAdvice'
+    | 'NormalAdvice'
+    | 'LowAdvice'
 
 // PDF.js 批注类型
 export enum PdfjsAnnotationType {
@@ -161,6 +167,48 @@ export const annotationDefinitions: IAnnotationType[] = [
         isOnce: false, // 是否只绘制一次
         readonly: true, // 是否只读
         icon: <SelectIcon /> // 图标
+    },
+    {
+        name: 'high',
+        type: AnnotationType.HIGHLIGHT,
+        pdfjsEditorType: PdfjsAnnotationEditorType.HIGHLIGHT,
+        pdfjsAnnotationType: PdfjsAnnotationType.HIGHLIGHT,
+        subtype: 'High',
+        isOnce: false,
+        readonly: true,
+        icon: <HighlightIcon />,
+        style: {
+            color: defaultOptions.setting.HIGH_COLOR, // 默认高亮颜色
+            opacity: 0.5 // 默认透明度
+        }
+    },
+    {
+        name: 'normal',
+        type: AnnotationType.HIGHLIGHT,
+        pdfjsEditorType: PdfjsAnnotationEditorType.HIGHLIGHT,
+        pdfjsAnnotationType: PdfjsAnnotationType.HIGHLIGHT,
+        subtype: 'Normal',
+        isOnce: false,
+        readonly: true,
+        icon: <HighlightIcon />,
+        style: {
+            color: defaultOptions.setting.NORMAL_COLOR, // 默认高亮颜色
+            opacity: 0.5 // 默认透明度
+        }
+    },
+    {
+        name: 'low',
+        type: AnnotationType.HIGHLIGHT,
+        pdfjsEditorType: PdfjsAnnotationEditorType.HIGHLIGHT,
+        pdfjsAnnotationType: PdfjsAnnotationType.HIGHLIGHT,
+        subtype: 'Low',
+        isOnce: false,
+        readonly: true,
+        icon: <HighlightIcon />,
+        style: {
+            color: defaultOptions.setting.LOW_COLOR, // 默认高亮颜色
+            opacity: 0.5 // 默认透明度
+        }
     },
     {
         name: 'highlight',

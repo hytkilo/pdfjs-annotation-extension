@@ -2,7 +2,7 @@ import './index.scss'
 import { ColorPicker, message } from 'antd'
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { annotationDefinitions, AnnotationType, IAnnotationType, PdfjsAnnotationEditorType } from '../../const/definitions'
-import { PaletteIcon, SaveIcon } from '../../const/icon'
+import { PaletteIcon, SaveIcon, CheckIcon } from '../../const/icon'
 import { SignatureTool } from './signature'
 import { StampTool } from './stamp'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +11,7 @@ import { defaultOptions } from '../../const/default_options'
 interface CustomToolbarProps {
     onChange: (annotation: IAnnotationType | null, dataTransfer: string | null) => void
     onSave: () => void
+    onCheckContract: () => void
 }
 
 export interface CustomToolbarRef {
@@ -131,8 +132,19 @@ const CustomToolbar = forwardRef<CustomToolbarRef, CustomToolbarProps>(function 
                         </div>
                         <div className="name">{t('normal.save')}</div>
                     </li>
+                    
                 }
-
+                {
+                    defaultOptions.setting.CONTRACT_CHECK_BUTTON && <li  title="合同检测" onClick={() => {
+                        props.onCheckContract()
+                    }}>
+                        <div className="icon">
+                            <CheckIcon />
+                        </div>
+                        <div className="name">合同检测</div>
+                    </li>
+                    
+                }
 
             </ul>
         </div>

@@ -65,8 +65,27 @@
                 }
             }
         }
+        .High {
+            background-color: #E690D188;
+        }
+        .Normal {
+            background-color: rgba(255, 85, 0, 0.2);
+        }
+        .Low {
+            background-color: rgba(40, 132, 255, 0.2);
+        }
+        .HighAdvice {
+            background-color: #5ffffe61;
+        }
+        .NormalAdvice {
+            background-color: #5ffffe61;
+        }
+        .LowAdvice {
+            background-color: #5ffffe61;
+        }
         .comment:hover {
-            background-color: var(--doorhanger-hover-bg-color);
+            // background-color: var(--doorhanger-hover-bg-color);
+            opacity: .7;
         }
         .selected {
             border-color: red;

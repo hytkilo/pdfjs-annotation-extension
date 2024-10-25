@@ -4,6 +4,7 @@ import Konva from 'konva'
 import { SHAPE_GROUP_NAME } from '../const'
 import { convertToRGB } from '../../utils/utils'
 import { AnnotationType, IAnnotationStore, PdfjsAnnotationEditorType, PdfjsAnnotationType } from '../../const/definitions'
+import { defaultOptions } from '../../const/default_options'
 
 export class HighlightDecoder extends Decoder {
     constructor(options) {
@@ -70,43 +71,89 @@ export class HighlightDecoder extends Decoder {
     }
 
     public decodePdfAnnotation(annotation: HighlightAnnotation | StrikeOutAnnotation | UnderlineAnnotation, allAnnotations: Annotation[]) {
-        const color = convertToRGB(annotation.color);
-
+        let color = convertToRGB(annotation.color)
+        debugger
         const typeMap: { [key: string]: AnnotationType } = {
             [PdfjsAnnotationType.HIGHLIGHT]: AnnotationType.HIGHLIGHT,
             [PdfjsAnnotationType.UNDERLINE]: AnnotationType.UNDERLINE,
-            [PdfjsAnnotationType.STRIKEOUT]: AnnotationType.STRIKEOUT,
-        };
-    
-        const type = typeMap[annotation.annotationType] || AnnotationType.HIGHLIGHT; // 默认类型为 HIGHLIGHT
-    
+            [PdfjsAnnotationType.STRIKEOUT]: AnnotationType.STRIKEOUT
+        }
+
+        const type = typeMap[annotation.annotationType] || AnnotationType.HIGHLIGHT // 默认类型为 HIGHLIGHT
+
         const ghostGroup = new Konva.Group({
             draggable: false,
             name: SHAPE_GROUP_NAME,
-            id: annotation.id,
-        });
-    
+            id: annotation.id
+        })
+
+        if (annotation.subtype === 'High') {
+            color = defaultOptions.setting.HIGH_COLOR
+            annotation.titleObj = {
+                dir: '',
+                str: '高风险'
+            }
+        } else if (annotation.subtype === 'Normal') {
+            color = defaultOptions.setting.NORMAL_COLOR
+            annotation.titleObj = {
+                dir: '',
+                str: '中风险'
+            }
+        } else if (annotation.subtype === 'Low') {
+            color = defaultOptions.setting.LOW_COLOR
+            annotation.titleObj = {
+                dir: '',
+                str: '低风险'
+            }
+        }
+
         const createShape = (quadPoint: QuadPoint[]) => {
-            const { x, y, width, height } = this.convertQuadPoints(quadPoint, annotation.pageViewer.viewport.scale, annotation.pageViewer.viewport.height);
+            const { x, y, width, height } = this.convertQuadPoints(quadPoint, annotation.pageViewer.viewport.scale, annotation.pageViewer.viewport.height)
             switch (annotation.annotationType) {
                 case PdfjsAnnotationType.HIGHLIGHT:
-                    return this.createHighlightShape(x, y, width, height, color);
+                    return this.createHighlightShape(x, y, width, height, color)
                 case PdfjsAnnotationType.UNDERLINE:
-                    return this.createUnderlineShape(x, y, width, height, color);
+                    return this.createUnderlineShape(x, y, width, height, color)
                 case PdfjsAnnotationType.STRIKEOUT:
-                    return this.createStrikeoutShape(x, y, width, height, color);
+                    return this.createStrikeoutShape(x, y, width, height, color)
                 default:
-                    return null;
+                    return null
             }
-        };
-    
+        }
+
+        if (annotation.titleObj.str === 'High风险') {
+            color = defaultOptions.setting.HIGH_COLOR
+            annotation.titleObj.str = '高风险'
+            annotation.subtype = 'High'
+        } else if (annotation.titleObj.str === 'Normal风险') {
+            color = defaultOptions.setting.NORMAL_COLOR
+            annotation.titleObj.str = '中风险'
+            annotation.subtype = 'Normal'
+        } else if (annotation.titleObj.str === 'Low风险') {
+            color = defaultOptions.setting.LOW_COLOR
+            annotation.titleObj.str = '低风险'
+            annotation.subtype = 'Low'
+        } else if (annotation.titleObj.str === 'High建议') {
+            color = defaultOptions.setting.HIGH_ADVICE_COLOR
+            annotation.titleObj.str = '建议（高）'
+            annotation.subtype = 'HighAdvice'
+        } else if (annotation.titleObj.str === 'Normal建议') {
+            color = defaultOptions.setting.NORMAL_ADVICE_COLOR
+            annotation.titleObj.str = '建议（中）'
+            annotation.subtype = 'NormalAdvice'
+        } else if (annotation.titleObj.str === 'Low建议') {
+            color = defaultOptions.setting.LOW_ADVICE_COLOR
+            annotation.titleObj.str = '建议（低）'
+            annotation.subtype = 'LowAdvice'
+        }
+
         annotation.quadPoints?.forEach(quadPoint => {
-            const shape = createShape(quadPoint);
+            const shape = createShape(quadPoint)
             if (shape) {
-                ghostGroup.add(shape);
+                ghostGroup.add(shape)
             }
-        });
-    
+        })
+
         const annotationStore: IAnnotationStore = {
             id: annotation.id,
             pageNumber: annotation.pageNumber,
@@ -124,10 +171,10 @@ export class HighlightDecoder extends Decoder {
                 text: annotation.contentsObj.str
             },
             comments: this.getComments(annotation, allAnnotations),
-            readonly: true,
-        };
-    
-        ghostGroup.destroy();
-        return annotationStore;
+            readonly: true
+        }
+
+        ghostGroup.destroy()
+        return annotationStore
     }
 }

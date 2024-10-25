@@ -29,11 +29,13 @@ export class Transform {
             pdfDocument.getPage(i + 1).then(page => {
                 const _pageViewer = pdfViewer.getPageView(i)
                 return page.getAnnotations().then(annotations =>
-                    annotations.map(annotation => ({
-                        ...annotation,
-                        pageNumber: i + 1,
-                        pageViewer: _pageViewer
-                    }))
+                    annotations.map(annotation => {
+                        return {
+                            ...annotation,
+                            pageNumber: i + 1,
+                            pageViewer: _pageViewer
+                        }
+                    })
                 )
             })
         )

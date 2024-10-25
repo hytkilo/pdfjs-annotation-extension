@@ -1,6 +1,9 @@
 {
     "annotations": {
         "select": "选择",
+        "high": "高风险",
+        "normal": "中风险",
+        "low": "低风险",
         "highlight": "高亮",
         "strikeout": "删除线",
         "underline": "下划线",

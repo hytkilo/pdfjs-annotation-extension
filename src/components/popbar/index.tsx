@@ -81,6 +81,8 @@ const CustomPopbar = forwardRef<CustomPopbarRef, CustomPopbarProps>(function Cus
     }
 
     const handleAnnotationClick = (annotation: IAnnotationType | null) => {
+        console.log(annotation)
+        console.log(currentRange)
         setShow(false)
         props.onChange(annotation, currentRange)
     }

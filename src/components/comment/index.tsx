@@ -19,7 +19,13 @@ import {
     UnderlineIcon,
     DownloadIcon,
     SignatureIcon,
-    StarIcon
+    StarIcon,
+    HighIcon,
+    NormalIcon,
+    LowIcon,
+    HighAdviceIcon,
+    NormalAdviceIcon,
+    LowAdviceIcon,
 } from '../../const/icon'
 
 const iconMapping: Record<PdfjsAnnotationSubtype, React.ReactNode> = {
@@ -40,8 +46,23 @@ const iconMapping: Record<PdfjsAnnotationSubtype, React.ReactNode> = {
     Text: <StarIcon />,
     FileAttachment: <DownloadIcon />,
     Popup: <FreehandIcon />,
-    Widget: <FreehandIcon />
+    Widget: <FreehandIcon />,
+    High: <HighIcon />,
+    Normal: <NormalIcon />,
+    Low: <LowIcon />,
+    HighAdvice: <HighAdviceIcon/>,
+    NormalAdvice: <NormalAdviceIcon/>,
+    LowAdvice: <LowAdviceIcon/>,
 };
+
+const typeRelMap = {
+    "High": "高风险",
+    "Normal": "中风险",
+    "Low": "低风险",
+    "HighAdvice": "建议（高）",
+    "NormalAdvice": "建议（中）",
+    "LowAdvice": "建议（低）",
+}
 
 const getIconBySubtype = (subtype: PdfjsAnnotationSubtype): React.ReactNode => {
     return iconMapping[subtype] || null;
@@ -106,6 +127,7 @@ const CustomComment = forwardRef<CustomCommentRef, CustomCommentProps>(function 
 
     const selectedAnnotation = (annotation: IAnnotationStore, isClick: boolean) => {
         setCurrentAnnotation(annotation)
+        console.log(annotation)
         if (!isClick) return
         // 滚动到对应的注释
         const element = annotationRefs.current[annotation.id];
@@ -265,12 +287,12 @@ const CustomComment = forwardRef<CustomCommentRef, CustomCommentProps>(function 
                 <h3>{t('comment.page', { value: pageNumber })}</h3>
                 {sortedAnnotations.map((annotation) => {
                     const isSelected = annotation.id === currentAnnotation?.id;
-                    const commonProps = { className: isSelected ? 'comment selected' : 'comment' };
+                    const commonProps = { className: (isSelected ? 'comment selected ' : 'comment ') + annotation.subtype };
                     return (
                         <div {...commonProps} key={annotation.id} onClick={() => handleAnnotationClick(annotation)} ref={el => (annotationRefs.current[annotation.id] = el)} >
                             <div className='title'>
                                 <AnnotationIcon subtype={annotation.subtype} />
-                                <div className='username'>{annotation.title}</div>
+                                <div className='username'>{typeRelMap[annotation.subtype] || annotation.title}</div>
                                 <span className='tool'>
                                     {formatPDFDate(annotation.date)}
                                     <Dropdown menu={{

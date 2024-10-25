@@ -154,6 +154,9 @@ class PdfjsAnnotationExtension {
                 onSave={() => {
                     this.saveData()
                 }}
+                onCheckContract={() => {
+                    this.checkContract()
+                }}
             />
         )
     }
@@ -283,6 +286,10 @@ class PdfjsAnnotationExtension {
             console.error('Fetch error:', error);
             return [];
         }
+    }
+
+    private async checkContract(): Promise<void> {
+        
     }
 
     /**
